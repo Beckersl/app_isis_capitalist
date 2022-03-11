@@ -29,6 +29,8 @@ export class Product {
     logo : string = ""
     cout : number = 0
     croissance: number = 0
+    lastupdate: number = 0
+    progressbarvalue: number = 0
     revenu: number = 0
     vitesse: number = 0
     quantite: number = 0

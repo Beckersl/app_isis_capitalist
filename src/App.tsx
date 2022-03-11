@@ -3,9 +3,9 @@ import { Grid } from '@mui/material';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { transform } from "./utlis";
-import { World } from './world';
+import { World, Product } from './world';
 import { Services } from './Services'
-import Product from './Product'
+import ProductComponent from './Product'
 import { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
@@ -15,6 +15,9 @@ function App() {
   let username = 'username';
   const [services, setServices] = useState(new Services(""))
   const [world, setWorld] = useState(new World())
+  const [qtmulti, setqtmulti] = useState({affichage: "x1", valeur: 1})
+
+
 
   useEffect(() => {
 
@@ -27,7 +30,34 @@ function App() {
 
   }, [])
 
+  function addToScore(gain:number) {
+    world.money = world.money + gain;
+  }
 
+  function onProductionDone(p: Product): void {
+    // calcul de la somme obtenue par la production du produit
+    let gain = p.quantite * p.revenu
+    // ajout de la somme à l’argent possédé
+    addToScore(gain)
+   }
+
+   const btnMultiChange = () => {
+     if (qtmulti.valeur == 1) {
+      setqtmulti({...qtmulti, valeur: 10, affichage:"x10"})
+     }
+     if (qtmulti.valeur == 10) {
+      setqtmulti({...qtmulti, valeur: 100, affichage:"x100"})
+     }
+     if (qtmulti.valeur == 100) {
+      setqtmulti({...qtmulti, valeur: 8, affichage:"Max"})
+     }
+     if (qtmulti.valeur == 8) {
+      setqtmulti({...qtmulti, valeur: 1, affichage:"x1"})
+     }
+   }
+   
+
+  console.log(world.products.product)
   return (
     <div className="App">
       <div className="header">
@@ -36,6 +66,7 @@ function App() {
           <span> {world.name} </span>
         </div>
         <div className='finHead'>
+          <div onClick={btnMultiChange}>{qtmulti.affichage} {qtmulti.valeur}</div>
           <span>Global Viewers</span>
           <div className='rondRouge'></div>
           <span dangerouslySetInnerHTML={{ __html: transform(world.money) }} />
@@ -60,7 +91,7 @@ function App() {
             <Grid container spacing={3}>
               {world.products.product.map(prod =>
                 <Grid item xs={4}>
-                  <Product prod={prod} services={services} />
+                  <ProductComponent onProductionDone={onProductionDone} prod={prod} services={services} />
                 </Grid>
               )}
             </Grid>

@@ -9,6 +9,7 @@ import ProductComponent from './Product'
 import { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Manager from './Manager';
 
 
 function App() {
@@ -55,7 +56,16 @@ function App() {
       setqtmulti({...qtmulti, valeur: 1, affichage:"x1"})
      }
    }
-   
+   function showManagers(){
+    if (window ==false){
+      setWindow(true)
+      
+    }
+    else {
+      setWindow(false)
+     
+    }
+  } 
 
   console.log(world.products.product)
   return (
@@ -101,6 +111,11 @@ function App() {
 
           </ul>
         </div>
+        { && window 
+        <div className='manageurs'>
+      <Manager world={world} services={ services } showManagers={showManagers} />
+    </div>
+}
       </div>
     </div>
   );

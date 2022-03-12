@@ -117,3 +117,17 @@
   margin: 40px;
 }
 
+.boutonAchat {
+  width: 80px;
+  height: 40px;
+  line-height: 40px;
+  background-color: #9146FF;
+  border-radius: 10px;
+}
+
+.boutonMulti {
+  background-color: #1F1F23;
+  width: 80px;
+  margin-right: 10px;
+}
+

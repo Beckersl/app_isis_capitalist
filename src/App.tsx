@@ -16,6 +16,7 @@ function App() {
   const [services, setServices] = useState(new Services(""))
   const [world, setWorld] = useState(new World())
   const [qtmulti, setqtmulti] = useState({affichage: "x1", valeur: 1})
+  const [money, setMoney] = useState(world.money)
 
 
 
@@ -31,12 +32,15 @@ function App() {
   }, [])
 
   function addToScore(gain:number) {
-    world.money = world.money + gain;
+    setMoney(money + gain);
+    world.money += gain;
   }
 
   function onProductionDone(p: Product): void {
+    console.log(p.quantite)
     // calcul de la somme obtenue par la production du produit
     let gain = p.quantite * p.revenu
+    console.log(gain)
     // ajout de la somme à l’argent possédé
     addToScore(gain)
    }
@@ -49,7 +53,7 @@ function App() {
       setqtmulti({...qtmulti, valeur: 100, affichage:"x100"})
      }
      if (qtmulti.valeur == 100) {
-      setqtmulti({...qtmulti, valeur: 8, affichage:"Max"})
+      setqtmulti({...qtmulti, valeur: 0, affichage:"Max"})
      }
      if (qtmulti.valeur == 8) {
       setqtmulti({...qtmulti, valeur: 1, affichage:"x1"})
@@ -66,10 +70,10 @@ function App() {
           <span> {world.name} </span>
         </div>
         <div className='finHead'>
-          <div onClick={btnMultiChange}>{qtmulti.affichage} {qtmulti.valeur}</div>
+          <div className='boutonMulti' onClick={btnMultiChange}>{qtmulti.affichage}</div>
           <span>Global Viewers</span>
           <div className='rondRouge'></div>
-          <span dangerouslySetInnerHTML={{ __html: transform(world.money) }} />
+          <span dangerouslySetInnerHTML={{ __html: transform(money) }} />
         </div>
       </div>
       <div className="main">
@@ -91,7 +95,7 @@ function App() {
             <Grid container spacing={3}>
               {world.products.product.map(prod =>
                 <Grid item xs={4}>
-                  <ProductComponent onProductionDone={onProductionDone} prod={prod} services={services} />
+                  <ProductComponent onProductionDone={onProductionDone} prod={prod} services={services} multi={qtmulti.affichage} multiValue={qtmulti.valeur} money={world.money} />
                 </Grid>
               )}
             </Grid>

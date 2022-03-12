@@ -4,27 +4,37 @@ import { Product } from './world';
 import { Services } from './Services';
 import ProgressBar from './ProgressBar';
 import Box from '@mui/material/Box';
+import { MultiSelectUnstyled } from '@mui/base';
 
+let inProd:boolean;
 
 type ProductProps = {
     prod: Product
     onProductionDone: (prod: Product) => void
     services: Services
+    multi: string
+    multiValue: number
+    money: number
 }
 
-let inProd = false;
-export default function ProductComponent({ prod, onProductionDone, services }: ProductProps) {
+const calcMaxCanBuy = () => {
+    // 
+}
 
+export default function ProductComponent({ prod, onProductionDone, services, multi, multiValue, money }: ProductProps) {
     function calcScore() {
+        console.log(inProd)
         if (prod.timeleft > 0) {
+            console.log(prod.timeleft)
             prod.timeleft = prod.timeleft - (Date.now() - prod.lastupdate) ;
-            prod.progressbarvalue = ((prod.vitesse - prod.timeleft) / prod.vitesse) * 100;
+            setProgress(((prod.vitesse - prod.timeleft) / prod.vitesse) * 100) ;
+            console.log("progress bar :" + progress);
+            console.log(prod.timeleft);
         }
-        if (prod.timeleft <= 0 && inProd == true) {
-            if (prod.timeleft < 0) {
-                prod.timeleft = 0;
-            }
-            prod.progressbarvalue = 0;
+        if (prod.timeleft < 0 && inProd==true) {
+            prod.timeleft = 0;
+            setProgress(0);
+            console.log("<0")
             inProd = false;
             onProductionDone(prod)
         }
@@ -41,16 +51,27 @@ export default function ProductComponent({ prod, onProductionDone, services }: P
     }, [])
 
     function startFabrication() {
+        console.log("click produit")
         prod.timeleft = prod.vitesse;
         prod.lastupdate = Date.now();
         inProd=true;
     }
+
+    const [achatPossible, setAchatPossible] = useState(0);
+    const achatFunc = () => {
+        
+        if (multiValue > 0) {
+            
+        }
+    }
     return (
-        <div className="productBox" onClick={startFabrication}>
-            <img src={services.server + prod.logo} />
+        <div className="productBox" >
+            <img src={services.server + prod.logo} onClick={startFabrication}/>
             <Box sx={{ width: '100%' }}>
-                <ProgressBar transitionDuration={"0.1s"} customLabel={" "}
-                    completed={progress} />
+                <ProgressBar transitionDuration={"0.1s"} customLabel={" "} completed={progress} />
+                <div>{prod.cout} {money} {achatPossible}</div>
+                <div className='boutonAchat' onClick={achatFunc}>Achat {multi}</div>
+                
             </Box>
         </div>
     )

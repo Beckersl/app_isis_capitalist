@@ -3,7 +3,7 @@ import { AxiosError, AxiosPromise } from 'axios';
 import {World} from './world';
 
 export class Services {
-    server = "https://isiscapitalist.kk.kurasawa.fr/"
+    server = "http://localhost:8081/"
     api = this.server + "adventureisis/generic";
     user = "";
     constructor(user: string) {

@@ -99,27 +99,28 @@
 }
 
 .buttons :hover {
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.9); 
+  box-shadow: 0 0 12px rgba(117, 117, 117, 0.9); 
 }
 
 .productBox {
   width: 100%;
-  height: 300px;
+  height: 400px;
   background-color:#EB0400;
 }
 
 .productBox img {
-  height: 80%;
-  
+  width: 100%;
+  height: 70%;
+  object-fit: cover;
+
 }
 
 .products {
   margin: 40px;
 }
 
-<<<<<<< HEAD
 .boutonAchat {
-  width: 80px;
+  width: 120px;
   height: 40px;
   line-height: 40px;
   background-color: #9146FF;
@@ -132,16 +133,132 @@
   margin-right: 10px;
 }
 
-=======
 .modal {
   position: fixed; /* reste en place */
   z-index: 2; /* au dessus du reste */
-  width: 800px; /* largeur */
-  height: 800px; /* hauteur */
+  width: 90%; /* largeur */
+  height: 89%; /* hauteur */
   overflow: auto; /* barre de scroll si besoin */
-  background-color: white; /* opaque */
-  border: solid;
-  top:10; /* a 10% du haut */
+  background-color: #0E0E10; /* opaque */
+  top:10%; /* a 10% du haut */
   left:20%; /* a 20% de la gauche */
+  margin:auto;
  }
->>>>>>> 0bf33c386dbcf39c4ad2d2416756ca005b3ed726
+
+.modal img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-right: 20px;
+    border-radius: 15px 0px 0px 15px;
+  }
+
+.managergrid {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #1F1F23;
+  margin: 0 20px 20px 20px;
+  width: 35%;
+  border-radius: 20px;
+  justify-content: space-between;
+}
+
+.container {
+  width: 100%;
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  
+}
+
+.managergrid button {
+  width: 90px;
+  height: 50px;
+  margin-right: 10px;
+  background-color:#9146FF;
+  font-family: 'Trebuchet MS', sans-serif;
+  font-size:large;
+  color: aliceblue;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 0 2px rgba(255, 246, 246, 0.219); 
+}
+
+.managergrid button:hover {
+  box-shadow: 0 0 8px rgba(255, 246, 246, 0.219); 
+}
+
+.managergrid button:disabled {
+  background-color: #4d4d4d;
+  box-shadow: 0 0 0 rgba(255, 246, 246, 0.219);
+}
+
+.infosmanager {
+  display: flex;
+  flex-direction: column;
+  height: 100px;
+  justify-content: space-around;
+}
+
+.title {
+  margin-left: 30px;
+}
+
+.croixM {
+  position: absolute;
+  z-index: 1000;
+  top: 30px;
+  background-color:#dfdfdf;
+  transform: rotate(-45deg);
+  height: 5px;
+  width: 30px;
+}
+
+.croixM::before{
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color:#dfdfdf;
+  transform: rotate(90deg);
+  height: 5px;
+  width: 30px;
+}
+
+.popUp {
+  position: absolute;
+  border-radius: 10px;
+  bottom: 30px;
+  left: 30px;
+  width: 300px;
+  height: 30px;
+  background-color:#3f3f3f;
+}
+
+.popUp span {
+  line-height: 30px;
+ margin-left:6px;
+}
+
+.popUp div{
+  position: absolute;
+  z-index: 1000;
+  top: 14px;
+  left: 270px;
+  background-color:#dfdfdf;
+  transform: rotate(-45deg);
+  height: 3px;
+  width: 20px;
+}
+
+.popUp div::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color:#dfdfdf;
+  transform: rotate(90deg);
+}

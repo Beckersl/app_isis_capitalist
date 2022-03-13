@@ -1,9 +1,10 @@
 import axios from 'axios'
 import { AxiosError, AxiosPromise } from 'axios';
-import {World} from './world';
+import {World, Pallier, Product} from './world';
 
 export class Services {
-    server = "http://localhost:8081/"
+    server = "https://isiscapitalist.kk.kurasawa.fr/"
+    // server = "http://localhost:8081/"
     api = this.server + "adventureisis/generic";
     user = "";
     constructor(user: string) {
@@ -13,11 +14,13 @@ export class Services {
         console.error('An error occurred', error.toJSON);
         return Promise.reject(error.message || error);
         }
+
         private static setHeaders(user : string) {
         return {
         "X-User": user
         }
         }
+
         getWorld(): AxiosPromise<World> {
         return axios({
         method: 'get',
@@ -25,6 +28,25 @@ export class Services {
         headers: Services.setHeaders(this.user)
         }).catch(Services.handleError)
         }
+
+        putManager(manager : Pallier): AxiosPromise<Response> {
+            return axios({
+            method: 'put',
+            url: this.api + '/manager',
+            data: manager,
+            headers: Services.setHeaders(this.user)
+            }).catch(Services.handleError)
+           }
+
+           putProduct(product : Product): AxiosPromise<Response> {
+            return axios({
+            method: 'put',
+            url: this.api + '/product',
+            data: product,
+            headers: Services.setHeaders(this.user)
+            }).catch(Services.handleError)
+           }
+           
        
    }
    

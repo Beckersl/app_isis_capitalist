@@ -45,14 +45,14 @@ function App() {
 
 
   function addToScore(gain: number) {
-    setMoney(money + gain);
+    setMoney(money + gain );
     world.money += gain;
     world.score += gain;
   }
 
   function onProductionDone(p: Product): void {
     // calcul de la somme obtenue par la production du produit
-    let gain = p.quantite * p.revenu
+    let gain = p.quantite * p.revenu * (1 +world.activeangels * world.angelbonus /100)
     // ajout de la somme à l’argent possédé
     addToScore(gain)
   }
@@ -68,6 +68,7 @@ function App() {
     setMoney(money - perte);
     console.log("money" + world.money)
     checkGlobalUpgrade();
+    console.log("cout prod"+ product.cout)
   }
 
 
@@ -100,6 +101,12 @@ function App() {
   const [showupgrade, setShowupgrade] = useState(false);
   const showupgradeClick = () => {
     setShowupgrade(!showupgrade)
+  }
+
+  
+  const [showAngelupgrade, setshowAngelupgrade] = useState(false);
+  const showAngelupgradeClick = () => {
+    setshowAngelupgrade(!showAngelupgrade)
   }
 
   function hireManager(manager: Pallier) {
@@ -137,174 +144,231 @@ function App() {
     }
   }
 
-    const close = () => { setOpen(false) }
-    const onUserNameChanged = (evt: any) => {
-      setUsername(evt.target.value);
-    }
-
-    const buyUpgrade = (upgrade: Pallier) => {
-      if (upgrade.typeratio == 'GAIN') {
-        world.products.product[upgrade.idcible - 1].revenu *= upgrade.ratio;
-      }
-      if (upgrade.typeratio == 'VITESSE') {
-
-      }
-    }
-
-
-
-    return (
-      <div className="App">
-        <div className="header">
-          <div className="debutHead">
-            <div className='imgLogo'><img src={services.server + world.logo} alt='logo du monde' /></div>
-            <span> {world.name} </span>
-          </div>
-          <div className='finHead'>
-            <div className='boutonMulti' onClick={btnMultiChange}>{qtmulti.affichage}</div>
-            <span>Global Viewers</span>
-            <div className='rondRouge'></div>
-            <span dangerouslySetInnerHTML={{ __html: transform(world.money) }} />
-          </div>
-        </div>
-        <div className="main">
-          <div className='sideBar'>
-            <div> <input type="text" value={username} onChange={onUserNameChanged} /></div>
-            <div className='buttons'>
-              <div className='button' onClick={showunlockClick} >Unlocks</div>
-              <div className='button' onClick={showupgradeClick} >Cash Upgrades</div>
-              <div className='button'>Angel Upgrades</div>
-              <div className='button' onClick={showManagersClick} >Managers</div>
-              <div className='button'>Investors</div>
-            </div>
-          </div>
-          <div className="product">
-            <div className="products">
-              <Box sx={{ flexGrow: 1 }}>
-                <Grid container spacing={3}>
-                  {world.products.product.map(prod =>
-                    <Grid item xs={4}>
-                      <ProductComponent onProductionDone={onProductionDone} prod={prod} services={services} multi={qtmulti.affichage} multiValue={qtmulti.valeur} money={world.money} onProductBuy={onProductBuy} />
-                    </Grid>
-                  )}
-                </Grid>
-              </Box>
-            </div>
-            {showManagers &&
-              <div className="modal">
-                <div>
-                  <div className='croixM' onClick={showManagersClick}></div>
-                  <h1 className="title">Managers make you feel better !</h1>
-                </div>
-                <div className='container'>
-                  {world.managers.pallier.filter(manager => !manager.unlocked).map(manager =>
-                    <div key={manager.idcible} className="managergrid">
-                      <div>
-                        <div className="logo">
-                          <img alt="manager logo" className="round" src={
-                            services.server + manager.logo} />
-                        </div>
-                      </div>
-                      <div className="infosmanager">
-                        <div className="managername"> {manager.name} </div>
-                        <div className="managercible"> {
-                          world.products.product[manager.idcible - 1].name} </div>
-                        <div className="managercost"> {manager.seuil} </div>
-                      </div>
-                      <div onClick={() => hireManager(manager)}>
-                        <button disabled={world.money < manager.seuil} >Hire !</button>
-                      </div>
-                      {open && <div className='popUp'>
-                        <span>Vous avez engagé un nouveau Manager !</span>
-                        <div onClick={close}></div>
-                      </div>}
-                    </div>)
-                  } </div>
-
-              </div>
-            }
-            {showunlock &&
-              <div className="modal">
-                <div>
-                  <div className='croixM' onClick={showunlockClick}></div>
-                  <h1 className="title">Unlocks</h1>
-                </div>
-                <div className='container'>
-                  {world.products.product.map(prod => prod.palliers.pallier.filter(unlock => !unlock.unlocked).map(unlock =>
-                    <div key={unlock.idcible} className="managergrid">
-                      <div>
-                        <div className="logo">
-                          <img alt="manager logo" className="round" src={
-                            services.server + unlock.logo} />
-                        </div>
-                      </div>
-                      <div className="infosmanager">
-                        <div className="managername"> {unlock.name} </div>
-                        <div>{unlock.typeratio} x{unlock.ratio} </div>
-                        <div className="managercible"> {
-                          // world.products.product[unlock.idcible - 1].name
-                        }
-                        </div>
-                        <div className="managercost"> {unlock.seuil} </div>
-                      </div>
-                    </div>))
-                  }
-                  {world.allunlocks.pallier.filter(unlock => !unlock.unlocked).map(unlock =>
-                    <div key={unlock.idcible} className="managergrid">
-                      <div>
-                        <div className="logo">
-                          <img alt="manager logo" className="round" src={
-                            services.server + unlock.logo} />
-                        </div>
-                      </div>
-                      <div className="infosmanager">
-                        <div className="managername"> {unlock.name} </div>
-                        <div>{unlock.typeratio} x{unlock.ratio} </div>
-                        <div className="managercible"> {
-                          // world.products.product[unlock.idcible - 1].name
-                        }
-                        </div>
-                        <div className="managercost"> {unlock.seuil} </div>
-                      </div>
-                    </div>)
-                  } </div>
-
-              </div>
-            }
-            {showupgrade &&
-              <div className="modal">
-                <div>
-                  <div className='croixM' onClick={showupgradeClick}></div>
-                  <h1 className="title">Upgrade</h1>
-                </div>
-                <div className='container'>
-                  {world.upgrades.pallier.filter(upgrade => !upgrade.unlocked).map(upgrade =>
-                    <div key={upgrade.idcible} className="managergrid">
-                      <div>
-                        <div className="logo">
-                          <img alt="manager logo" className="round" src={
-                            services.server + upgrade.logo} />
-                        </div>
-                      </div>
-                      <div className="infosmanager">
-                        <div className="managername"> {upgrade.name} </div>
-                        <div className="managercost"> {upgrade.seuil} </div>
-                        <div>{upgrade.typeratio} x{upgrade.ratio} </div>
-                        {/* <div className="managercible"> {
-                          world.products.product[upgrade.idcible - 1].name} </div> */}
-                      </div>
-                      <div onClick={() => buyUpgrade(upgrade)}>
-                        <button disabled={world.money < upgrade.seuil} >Acheter</button>
-                      </div>
-                    </div>)
-                  } </div>
-
-              </div>
-            }
-          </div>
-        </div>
-      </div>
-    );
+  const close = () => { setOpen(false) }
+  const onUserNameChanged = (evt: any) => {
+    setUsername(evt.target.value);
   }
 
-  export default App;
+  const buyUpgrade = (upgrade: Pallier) => {
+    if (upgrade.typeratio == 'GAIN') {
+      world.products.product[upgrade.idcible - 1].revenu = world.products.product[upgrade.idcible - 1].revenu * upgrade.ratio;
+      world.money = world.money - upgrade.seuil; 
+    }
+    if (upgrade.typeratio == 'VITESSE') {
+      world.products.product[upgrade.idcible - 1].vitesse = world.products.product[upgrade.idcible - 1].vitesse / upgrade.ratio;
+      world.money = world.money - upgrade.seuil; 
+    }
+    if (upgrade.typeratio == "ANGE") {
+      world.angelbonus += upgrade.ratio;
+      world.activeangels = world.activeangels - upgrade.seuil; 
+    }
+    services.putUpgrade(upgrade)
+  }
+
+  const [InvestorsClick, setInvestorsClick] = useState(false);
+  const showInvestorsClick = () => {
+    setInvestorsClick(!InvestorsClick)
+  }
+
+  const resetWorld = () => {
+    services.deleteWorld(world);
+    document.location.reload();
+  }
+
+  
+
+  return (
+    <div className="App">
+      <div className="header">
+        <div className="debutHead">
+          <div className='imgLogo'><img src={services.server + world.logo} alt='logo du monde' /></div>
+          <span> {world.name} </span>
+        </div>
+        <div className='finHead'>
+          <div className='boutonMulti' onClick={btnMultiChange}>{qtmulti.affichage}</div>
+          <span>Global Viewers</span>
+          <div className='rondRouge'></div>
+          <span dangerouslySetInnerHTML={{ __html: transform(world.money) }} />
+        </div>
+      </div>
+      <div className="main">
+        <div className='sideBar'>
+        <div className='userInput'> <input type="text" value={username} onChange={onUserNameChanged} /></div>
+          <div className='buttons'>
+            <div className='button' onClick={showManagersClick} >Managers</div>
+            <div className='button' onClick={showunlockClick} >Unlocks</div>
+            <div className='button' onClick={showupgradeClick} >Cash Upgrades</div>
+            <div className='button' onClick={showAngelupgradeClick} >Angel Upgrades</div>
+            <div className='button' onClick={showInvestorsClick} >Investors</div>
+          </div>
+        </div>
+        <div className="product">
+          <div className="products">
+            <Box sx={{ flexGrow: 1 }}>
+              <Grid container spacing={3}>
+                {world.products.product.map(prod =>
+                  <Grid key={prod.id} item xs={4}>
+                    <ProductComponent  onProductionDone={onProductionDone} prod={prod} services={services} multi={qtmulti.affichage} multiValue={qtmulti.valeur} money={world.money} onProductBuy={onProductBuy} />
+                  </Grid>
+                )}
+              </Grid>
+            </Box>
+          </div>
+          {showManagers &&
+            <div className="modal">
+              <div>
+                <div className='croixM' onClick={showManagersClick}></div>
+                <h1 className="title">Managers make you feel better !</h1>
+              </div>
+              <div className='container'>
+                {world.managers.pallier.filter(manager => !manager.unlocked).map(manager =>
+                  <div key={manager.idcible} className="managergrid">
+                    <div>
+                      <div className="logo">
+                        <img alt="manager logo" className="round" src={
+                          services.server + manager.logo} />
+                      </div>
+                    </div>
+                    <div className="infosmanager">
+                      <div className="managername"> {manager.name} </div>
+                      <div className="managercible"> {
+                        world.products.product[manager.idcible - 1].name} </div>
+                      <div className="managercost"> {manager.seuil} </div>
+                    </div>
+                    <div onClick={() => hireManager(manager)}>
+                      <button disabled={world.money < manager.seuil} >Hire !</button>
+                    </div>
+                    {open && <div className='popUp'>
+                      <span>Vous avez engagé un nouveau Manager !</span>
+                      <div onClick={close}></div>
+                    </div>}
+                  </div>)
+                } </div>
+
+            </div>
+          }
+          {showunlock &&
+            <div className="modal">
+              <div>
+                <div className='croixM' onClick={showunlockClick}></div>
+                <h1 className="title">Unlocks</h1>
+              </div>
+              <div className='container'>
+                {world.products.product.map(prod => prod.palliers.pallier.filter(unlock => !unlock.unlocked).map(unlock =>
+                  <div key={unlock.idcible} className="managergrid">
+                    <div>
+                      <div className="logo">
+                        <img alt="manager logo" className="round" src={
+                          services.server + unlock.logo} />
+                      </div>
+                    </div>
+                    <div className="infosmanager">
+                      <div className="managername"> {unlock.name} </div>
+                      <div>{unlock.typeratio} x{unlock.ratio} </div>
+                      <div className="managercible"> {
+                        // world.products.product[unlock.idcible - 1].name
+                      }
+                      </div>
+                      <div className="managercost"> {unlock.seuil} </div>
+                    </div>
+                  </div>))
+                }
+                {world.allunlocks.pallier.filter(unlock => !unlock.unlocked).map(unlock =>
+                  <div key={unlock.idcible} className="managergrid">
+                    <div>
+                      <div className="logo">
+                        <img alt="manager logo" className="round" src={
+                          services.server + unlock.logo} />
+                      </div>
+                    </div>
+                    <div className="infosmanager">
+                      <div className="managername"> {unlock.name} </div>
+                      <div>{unlock.typeratio} x{unlock.ratio} </div>
+                      <div className="managercible"> {
+                        // world.products.product[unlock.idcible - 1].name
+                      }
+                      </div>
+                      <div className="managercost"> {unlock.seuil} </div>
+                    </div>
+                  </div>)
+                } </div>
+
+            </div>
+          }
+          {showupgrade &&
+            <div className="modal">
+              <div>
+                <div className='croixM' onClick={showupgradeClick}></div>
+                <h1 className="title">Upgrade</h1>
+              </div>
+              <div className='container'>
+                {world.upgrades.pallier.filter(upgrade => !upgrade.unlocked).map(upgrade =>
+                  <div key={upgrade.idcible} className="managergrid">
+                    <div>
+                      <div className="logo">
+                        <img alt="manager logo" className="round" src={
+                          services.server + upgrade.logo} />
+                      </div>
+                    </div>
+                    <div className="infosmanager">
+                      <div className="managername"> {upgrade.name} </div>
+                      <div className="managercost"> {upgrade.seuil} </div>
+                      <div>{upgrade.typeratio} x{upgrade.ratio} </div>
+                      <div className="managercible"> {
+                        world.products.product[upgrade.idcible - 1].name} </div>
+                    </div>
+                    <div onClick={() => buyUpgrade(upgrade)}>
+                      <button disabled={world.money < upgrade.seuil} >Acheter</button>
+                    </div>
+                  </div>)
+                } </div>
+
+            </div>
+          }
+          {InvestorsClick && <div className="modal" >
+            <div className='croixM' onClick={showInvestorsClick}></div>
+            <div className="angelContainer">
+            <h1 className="title">Investors</h1>
+            <div className="angesActifs">Nombre d'anges actifs : {world.activeangels}</div>
+            <div className="reset" onClick={resetWorld} >
+              <h1>RESET</h1>
+            <div className="angesActifs">Nombre d'anges accumulé : {150*Math.sqrt(world.score/Math.pow(10,15))-world.totalangels}</div>
+              </div>
+            </div>
+            
+          </div>}
+          {showAngelupgrade &&
+            <div className="modal">
+              <div>
+                <div className='croixM' onClick={showAngelupgradeClick}></div>
+                <h1 className="title">Angel Upgrade</h1>
+              </div>
+              <div className='container'>
+                {world.angelupgrades.pallier.filter(upgrade => !upgrade.unlocked).map(upgrade =>
+                  <div key={upgrade.idcible} className="managergrid">
+                    <div>
+                      <div className="logo">
+                        <img alt="manager logo" className="round" src={
+                          services.server + upgrade.logo} />
+                      </div>
+                    </div>
+                    <div className="infosmanager">
+                      <div className="managername"> {upgrade.name} </div>
+                      <div className="managercost"> {upgrade.seuil} </div>
+                      <div>{upgrade.typeratio} x{upgrade.ratio} </div>
+                    </div>
+                    <div onClick={() => buyUpgrade(upgrade)}>
+                      <button disabled={world.money < upgrade.seuil} >Acheter</button>
+                    </div>
+                  </div>)
+                } </div>
+
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;

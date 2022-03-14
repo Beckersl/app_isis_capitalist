@@ -40,6 +40,7 @@ export default function ProductComponent({ prod, onProductionDone, services, mul
         if (prod.timeleft > 0) {
             console.log("timeleft :"+prod.timeleft)
             prod.timeleft = prod.timeleft - (Date.now() - prod.lastupdate) ;
+            prod.lastupdate = Date.now();
             setProgress(((prod.vitesse - prod.timeleft) / prod.vitesse) * 100) ;
             console.log(progress)
             if (prod.timeleft == 0) {prod.timeleft-=1}
@@ -123,7 +124,7 @@ export default function ProductComponent({ prod, onProductionDone, services, mul
             <LinearProgress variant="determinate" value={progress} />
                 <div className='quantite'>Quantité : {prod.quantite}</div>
                 <div onClick={achatFunc}>
-                    <button className='boutonAchat' disabled={achatPossible < multiValue && achatPossible == 0} >Cout: {prod.cout} Achat x{afficheAchat}</button>
+                    <button className='boutonAchat' disabled={achatPossible < multiValue || achatPossible == 0} >Cout: {prod.cout} Achat x{afficheAchat}</button>
                 </div>
             </Box>
         </div>

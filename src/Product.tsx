@@ -4,6 +4,7 @@ import { Product } from './world';
 import { Services } from './Services';
 import ProgressBar from './ProgressBar';
 import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
 
 
 let inProd:boolean;
@@ -23,6 +24,8 @@ export default function ProductComponent({ prod, onProductionDone, services, mul
     const [achatPossible, setAchatPossible] = useState(0);
     const [afficheAchat, setAfficheAchat] = useState(10);
     const [quantite, setQuantite] = useState(prod.quantite);
+    const [cout, setCout] = useState(prod.cout);
+    const [progress, setProgress] = useState(0)
 
     useEffect(() => {
         calcMaxCanBuy()
@@ -35,8 +38,10 @@ export default function ProductComponent({ prod, onProductionDone, services, mul
     function calcScore() {
         if(prod.managerUnlocked == true && inProd == false) {startFabrication()}
         if (prod.timeleft > 0) {
+            console.log("timeleft :"+prod.timeleft)
             prod.timeleft = prod.timeleft - (Date.now() - prod.lastupdate) ;
             setProgress(((prod.vitesse - prod.timeleft) / prod.vitesse) * 100) ;
+            console.log(progress)
             if (prod.timeleft == 0) {prod.timeleft-=1}
         }
         if (prod.timeleft < 0 && inProd==true) {
@@ -47,7 +52,7 @@ export default function ProductComponent({ prod, onProductionDone, services, mul
         }
     }
 
-    const [progress, setProgress] = useState(0)
+    
     const savedCallback = useRef(calcScore)
     useEffect(() => savedCallback.current = calcScore)
     useEffect(() => {
@@ -80,11 +85,15 @@ export default function ProductComponent({ prod, onProductionDone, services, mul
     const achatFunc = () => {
         console.log("achat" + afficheAchat)
         onProductBuy(afficheAchat, prod)
+        prod.cout = prod.cout * Math.pow(prod.croissance, prod.quantite+afficheAchat - 1);
+        // setCout(cout * Math.pow(prod.croissance, afficheAchat - 1))
+        console.log("cout prod  "+ Math.pow(prod.croissance, prod.quantite+afficheAchat - 1))
         prod.quantite += afficheAchat
         setQuantite(prod.quantite)
         console.log(prod.quantite)
         services.putProduct(prod)
         testUnlockAvailable()
+        
     }
 
     function testUnlockAvailable() {
@@ -111,10 +120,10 @@ export default function ProductComponent({ prod, onProductionDone, services, mul
         <div className="productBox" >
             <img src={services.server + prod.logo} onClick={startFabrication}/>
             <Box sx={{ width: '100%' }}>
-                <ProgressBar transitionDuration={"0.1s"} customLabel={" "} completed={progress} />
-                <div>{prod.cout} {money} {achatPossible} quantité : {quantite}</div>
+            <LinearProgress variant="determinate" value={progress} />
+                <div className='quantite'>Quantité : {prod.quantite}</div>
                 <div onClick={achatFunc}>
-                    <button className='boutonAchat' disabled={achatPossible < multiValue} >Achat x{afficheAchat}</button>
+                    <button className='boutonAchat' disabled={achatPossible < multiValue && achatPossible == 0} >Cout: {prod.cout} Achat x{afficheAchat}</button>
                 </div>
             </Box>
         </div>

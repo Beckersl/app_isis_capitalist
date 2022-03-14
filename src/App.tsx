@@ -68,7 +68,7 @@ function App() {
     setMoney(money - perte);
     console.log("money" + world.money)
     checkGlobalUpgrade();
-    product.cout = product.cout * Math.pow(product.croissance, qt - 1)
+    console.log("cout prod"+ product.cout)
   }
 
 
@@ -193,7 +193,7 @@ function App() {
       </div>
       <div className="main">
         <div className='sideBar'>
-          <div> <input type="text" value={username} onChange={onUserNameChanged} /></div>
+        <div className='userInput'> <input type="text" value={username} onChange={onUserNameChanged} /></div>
           <div className='buttons'>
             <div className='button' onClick={showManagersClick} >Managers</div>
             <div className='button' onClick={showunlockClick} >Unlocks</div>
@@ -207,8 +207,8 @@ function App() {
             <Box sx={{ flexGrow: 1 }}>
               <Grid container spacing={3}>
                 {world.products.product.map(prod =>
-                  <Grid item xs={4}>
-                    <ProductComponent onProductionDone={onProductionDone} prod={prod} services={services} multi={qtmulti.affichage} multiValue={qtmulti.valeur} money={world.money} onProductBuy={onProductBuy} />
+                  <Grid key={prod.id} item xs={4}>
+                    <ProductComponent  onProductionDone={onProductionDone} prod={prod} services={services} multi={qtmulti.affichage} multiValue={qtmulti.valeur} money={world.money} onProductBuy={onProductBuy} />
                   </Grid>
                 )}
               </Grid>

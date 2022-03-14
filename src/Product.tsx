@@ -84,6 +84,7 @@ export default function ProductComponent({ prod, onProductionDone, services, mul
         setQuantite(prod.quantite)
         console.log(prod.quantite)
         services.putProduct(prod)
+        testUnlockAvailable()
     }
 
     function testUnlockAvailable() {

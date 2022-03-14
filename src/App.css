@@ -262,3 +262,16 @@
   background-color:#dfdfdf;
   transform: rotate(90deg);
 }
+
+.angelContainer {
+  width: 300px;
+  margin: 20px;
+  background-color:#1F1F23;
+}
+
+.reset {
+  text-align: center;
+  margin: 10px;
+  background-color:#9146FF;
+  border-radius: 10px;
+}
